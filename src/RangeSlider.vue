@@ -39,6 +39,14 @@ export default {
       type: [String, Number],
       default: 100
     },
+    limitUp: {
+      type: [String, Number],
+      default: 100
+    },
+    limitDown: {
+      type: [String, Number],
+      default: 0
+    },
     step: {
       type: [String, Number],
       default: 1
@@ -74,6 +82,14 @@ export default {
 
     _max () {
       return Number(this.max)
+    },
+
+    _limitDown() {
+      return Number(this.limitDown)
+    },
+
+    _limitUp() {
+      return Number(this.limitUp)
     },
 
     _step () {
@@ -112,16 +128,24 @@ export default {
 
     drag (event: Event, offset: { left: number, top: number }) {
       const { offsetWidth } = this.$refs.inner
-      this.actualValue = this.round(this.valueFromBounds(offset.left, offsetWidth))
-      this.emitInput(this.actualValue)
+      const val = this.round(this.valueFromBounds(offset.left, offsetWidth))
+
+      if(this._limitUp >= val && this._limitDown <= val) {
+        this.actualValue = val
+        this.emitInput(this.actualValue)
+      }
     },
 
     dragEnd (event: Event, offset: { left: number, top: number }) {
       const { offsetWidth } = this.$refs.inner
-      this.actualValue = this.round(this.valueFromBounds(offset.left, offsetWidth))
+      const val = this.round(this.valueFromBounds(offset.left, offsetWidth))
 
-      if (this.dragStartValue !== this.actualValue) {
-        this.emitChange(this.actualValue)
+      if(this._limitUp >= val && this._limitDown <= val) {
+        this.actualValue = val
+
+        if (this.dragStartValue !== this.actualValue) {
+          this.emitChange(this.actualValue)
+        }
       }
     },
 

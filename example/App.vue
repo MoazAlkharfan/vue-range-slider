@@ -5,6 +5,8 @@
       v-model="value"
       :name="name"
       :min="min"
+      :limitDown="15"
+      :limitUp="90"
       :max="max"
       :step="step"
       :disabled="disabled"></range-slider>
